@@ -26,3 +26,4 @@ pnpm-debug.log*
 # Project planning files
 info.md
 plan.md
+metadata/
