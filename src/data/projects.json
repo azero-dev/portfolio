@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "title": "Example Project",
+    "description": "A sample project description.",
+    "tags": ["React", "TypeScript", "Tailwind"],
+    "link": "https://example.com",
+    "image": "/images/project-placeholder.jpg",
+    "status": "active",
+    "date": "2024-01-01"
+  }
+]

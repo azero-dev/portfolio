@@ -1,0 +1,24 @@
+{
+  "common": {
+    "home": "Inicio",
+    "about": "Sobre mí",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "readMore": "Leer más",
+    "viewAll": "Ver todos"
+  },
+  "about": {
+    "title": "Sobre mí",
+    "experience": "Experiencia",
+    "education": "Educación",
+    "skills": "Habilidades",
+    "projects": "Proyectos",
+    "contactForm": "Formulario de contacto"
+  },
+  "blog": {
+    "recentPosts": "Publicaciones recientes",
+    "allPosts": "Todas las publicaciones",
+    "tags": "Etiquetas",
+    "search": "Buscar"
+  }
+}

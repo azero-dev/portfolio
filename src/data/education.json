@@ -1,0 +1,14 @@
+[
+  {
+    "institution": "University of Technology",
+    "degree": "Master of Computer Science",
+    "period": "2018 - 2020",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+  },
+  {
+    "institution": "Tech Institute",
+    "degree": "Bachelor of Software Engineering",
+    "period": "2014 - 2018",
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+  }
+]

@@ -7,12 +7,9 @@ import cloudflare from '@astrojs/cloudflare';
 // https://astro.build/config
 export default defineConfig({
   integrations: [react()],
-  adapter: cloudflare({
-    platformProxy: {
-      enabled: true
-    }
-  }),
+  adapter: cloudflare(),
   output: 'server',
+  site: 'https://inferente.com',
   vite: {
     plugins: [tailwindcss()]
   }

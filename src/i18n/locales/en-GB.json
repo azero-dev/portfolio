@@ -1,0 +1,24 @@
+{
+  "common": {
+    "home": "Home",
+    "about": "About",
+    "blog": "Blog",
+    "contact": "Contact",
+    "readMore": "Read more",
+    "viewAll": "View all"
+  },
+  "about": {
+    "title": "About Me",
+    "experience": "Experience",
+    "education": "Education",
+    "skills": "Skills",
+    "projects": "Projects",
+    "contactForm": "Contact Form"
+  },
+  "blog": {
+    "recentPosts": "Recent Posts",
+    "allPosts": "All Posts",
+    "tags": "Tags",
+    "search": "Search"
+  }
+}

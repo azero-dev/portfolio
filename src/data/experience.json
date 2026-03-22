@@ -1,0 +1,16 @@
+[
+  {
+    "company": "Example Corp",
+    "role": "Senior Developer",
+    "period": "2022 - Present",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "skills": ["React", "TypeScript", "Node.js", "AWS"]
+  },
+  {
+    "company": "Startup Inc",
+    "role": "Frontend Engineer",
+    "period": "2020 - 2022",
+    "description": "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "skills": ["Vue.js", "JavaScript", "CSS", "GraphQL"]
+  }
+]
