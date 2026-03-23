@@ -1,0 +1,21 @@
+name = "portfolio"
+compatibility_date = "2025-03-23"
+pages_build_output_dir = "./dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "portfolio-db"
+database_id = "TODO"  # Fill in after creating database
+preview_database_id = "TODO"  # For local development
+migrations_dir = "./migrations"
+
+[[kv_namespaces]]
+binding = "KV"
+id = "TODO"  # Fill in after creating KV namespace
+preview_id = "TODO"  # For local development
+
+[env.production]
+name = "portfolio-production"
+
+[env.preview]
+name = "portfolio-preview"
