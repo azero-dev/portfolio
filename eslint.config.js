@@ -18,8 +18,13 @@ export default [
     },
     plugins: {
       '@typescript-eslint': typescriptEslint,
-      'react': eslintPluginReact,
+      react: eslintPluginReact,
       'react-hooks': eslintPluginReactHooks,
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
     },
     rules: {
       ...typescriptEslint.configs.recommended.rules,

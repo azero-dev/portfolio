@@ -1,0 +1,15 @@
+/* Font faces for Minimal Cyberpunk theme */
+@font-face {
+  font-family: 'Share Tech Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/share-tech-mono.woff2') format('woff2');
+  /* Fallback to system monospace if font not loaded */
+}
+
+/* Optional: Add a variable for font family */
+:root {
+  --font-mono: 'Share Tech Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}

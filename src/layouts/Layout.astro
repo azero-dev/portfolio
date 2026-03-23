@@ -1,23 +1,73 @@
+---
+// Import global styles
+import '../styles/global.css';
+
+// Import React components for theme management
+import { AppWrapper } from '@/components/layout/AppWrapper';
+import { ThemeToggle } from '@/components/layout/ThemeToggle';
+import { Navigation } from '@/components/layout/Navigation';
+
+// Import layout components
+import Container from '@/components/layout/Container.astro';
+---
+
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <meta name="generator" content={Astro.generator} />
+  <title>Portfolio - Minimal Cyberpunk</title>
+</head>
+<body class="min-h-screen font-sans antialiased">
+  {/* Use React client component for theme provider */}
+  <AppWrapper client:only="react">
+    <Container as="div" className="min-h-screen">
+      <header class="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <Container as="div" className="flex h-16 items-center justify-between">
+          <div class="flex items-center gap-2">
+            <a href="/" class="font-mono text-xl font-bold tracking-tighter text-primary hover:opacity-80 transition-opacity">
+              &gt;portfolio_
+            </a>
+          </div>
+          <div class="flex items-center gap-4">
+            <Navigation client:only="react" />
+            <ThemeToggle client:only="react" />
+          </div>
+        </Container>
+      </header>
+
+      <main class="flex-1">
+        <slot />
+      </main>
+
+      <footer class="mt-auto border-t border-border py-8">
+        <Container>
+          <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <div class="font-mono text-sm text-muted-foreground">
+              &copy; {new Date().getFullYear()} Portfolio. Built with Astro.
+            </div>
+            <div class="flex items-center gap-4">
+              <a href="https://github.com/azero-dev" target="_blank" rel="noopener noreferrer" class="font-mono text-sm text-muted-foreground hover:text-primary">
+                GitHub
+              </a>
+              <a href="https://www.linkedin.com/in/franrodriguez1/" target="_blank" rel="noopener noreferrer" class="font-mono text-sm text-muted-foreground hover:text-primary">
+                LinkedIn
+              </a>
+            </div>
+          </div>
+        </Container>
+      </footer>
+    </Container>
+  </AppWrapper>
+</body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+  /* Ensure smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
 </style>

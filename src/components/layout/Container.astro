@@ -1,0 +1,14 @@
+---
+// Container component for consistent layout widths
+interface Props {
+  as?: string;
+  className?: string;
+}
+
+const { as = 'div', className = '' } = Astro.props;
+const Component = as;
+---
+
+<Component class={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${className}`}>
+  <slot />
+</Component>

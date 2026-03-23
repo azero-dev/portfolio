@@ -1,0 +1,106 @@
+/* Minimal Cyberpunk Theme Variables */
+/* CSS variables for light and dark themes */
+:root {
+  /* Base colors in HSL for easy manipulation */
+  --background: 0 0% 98%; /* Light gray background */
+  --foreground: 0 0% 10%; /* Almost black text */
+
+  --card: 0 0% 100%; /* White cards */
+  --card-foreground: 0 0% 10%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+
+  /* Primary: Adjusted orange #ff7733 for better accessibility */
+  --primary: 20 100% 60%;
+  --primary-foreground: 0 0% 100%; /* White text on orange */
+
+  --secondary: 0 0% 90%; /* Light gray */
+  --secondary-foreground: 0 0% 10%;
+
+  --muted: 0 0% 92%;
+  --muted-foreground: 0 0% 40%;
+
+  --accent: 160 100% 50%; /* Cyan accent for cyberpunk feel */
+  --accent-foreground: 0 0% 10%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 0 0% 85%;
+  --input: 0 0% 90%;
+  --ring: 20 100% 60%; /* Orange ring focus */
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Dark theme - Minimal Cyberpunk */
+  --background: 0 0% 7%; /* #111111 */
+  --foreground: 0 0% 100%; /* White text */
+
+  --card: 0 0% 10%; /* #1a1a1a */
+  --card-foreground: 0 0% 100%;
+
+  --popover: 0 0% 10%;
+  --popover-foreground: 0 0% 100%;
+
+  /* Primary: Orange neon - adjusted for contrast */
+  --primary: 20 100% 60%; /* #ff7733 */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 0 0% 13%; /* #222222 */
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 0 0% 20%; /* #333333 */
+  --muted-foreground: 0 0% 70%;
+
+  --accent: 160 100% 50%; /* Cyan */
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 20 100% 60%;
+}
+
+/* Base styles */
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings:
+    'rlig' 1,
+    'calt' 1;
+  font-family: var(--font-sans);
+}
+
+/* Smooth transitions for theme switching */
+body {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Custom scrollbar for cyberpunk feel */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.8);
+}

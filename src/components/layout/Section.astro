@@ -1,0 +1,30 @@
+---
+// Section component for vertical spacing
+interface Props {
+  as?: string;
+  className?: string;
+  padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+}
+
+const { 
+  as = 'section', 
+  className = '', 
+  padding = 'lg' 
+} = Astro.props;
+
+const Component = as;
+
+const paddingClasses = {
+  none: 'py-0',
+  sm: 'py-8',
+  md: 'py-12',
+  lg: 'py-16',
+  xl: 'py-24',
+};
+
+const paddingKey = padding as keyof typeof paddingClasses;
+---
+
+<Component class={`${paddingClasses[paddingKey]} ${className}`}>
+  <slot />
+</Component>
