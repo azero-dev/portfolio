@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "format": "prettier --write .",
-    "lint:fix": "eslint --fix ."
+    "lint:fix": "eslint --fix .",
+    "lighthouse": "npx lighthouse https://inferente.com --output html --output-path ./lighthouse-report.html"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.1.3",

@@ -28,6 +28,9 @@ export default defineConfig({
   }),
   output: 'server',
   site: 'https://inferente.com',
+  security: {
+    checkOrigin: true,
+  },
   vite: {
     build: {
       rollupOptions: {

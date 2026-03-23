@@ -40,6 +40,9 @@ const siteTitle = 'azer0 Portfolio';
 const siteUrl = 'https://inferente.com';
 const twitterHandle = '@azer0';
 
+// Cloudflare Analytics token (optional)
+const cfAnalyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
+
 // Construct full title
 const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
 
@@ -130,6 +133,15 @@ const jsonLd = {
   <meta property="twitter:image" content={new URL(image, siteUrl).href} />
   <meta property="twitter:creator" content={twitterHandle} />
   <meta property="twitter:site" content={twitterHandle} />
+  
+  <!-- Cloudflare Web Analytics -->
+  {cfAnalyticsToken && (
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon={JSON.stringify({ token: cfAnalyticsToken })}
+    />
+  )}
   
   <!-- Canonical URL -->
   <link rel="canonical" href={canonicalUrl} />
