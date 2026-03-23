@@ -6,6 +6,8 @@ import BlogList from '../components/blog/BlogList.astro';
 import BlogSidebar from '../components/blog/BlogSidebar.astro';
 import { getCollection } from 'astro:content';
 
+export const prerender = true;
+
 // Get all posts
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 allPosts.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());

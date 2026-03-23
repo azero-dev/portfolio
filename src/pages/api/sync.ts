@@ -1,6 +1,17 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 
+interface D1PreparedStatement {
+  bind(...params: unknown[]): D1PreparedStatement;
+  first<T = unknown>(): Promise<T | null>;
+  all<T = unknown>(): Promise<{ results?: T[] }>;
+  run(): Promise<{ success: boolean }>;
+}
+
+interface D1Database {
+  prepare(query: string): D1PreparedStatement;
+}
+
 export const POST: APIRoute = async ({ request }) => {
   // Check secret token
   const authHeader = request.headers.get('Authorization');
@@ -17,7 +28,7 @@ export const POST: APIRoute = async ({ request }) => {
     const posts = await getCollection('blog', ({ data }) => !data.draft);
 
     // Access D1 database (if available)
-    const db = (import.meta as any).env?.DB;
+    const db = (import.meta.env as unknown as { DB?: D1Database }).DB;
     if (!db) {
       console.warn('DB binding not available');
       return new Response(JSON.stringify({ message: 'DB not available', count: posts.length }), {
@@ -32,7 +43,7 @@ export const POST: APIRoute = async ({ request }) => {
       const existing = await db
         .prepare('SELECT id FROM posts WHERE slug = ?')
         .bind(post.id)
-        .first();
+        .first<{ id: number }>();
 
       if (!existing) {
         await db

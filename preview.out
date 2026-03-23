@@ -1,0 +1,8 @@
+20:56:33 [@astrojs/cloudflare] Enabling image processing with Cloudflare Images for production with the "IMAGES" Images binding.
+20:56:33 [@astrojs/cloudflare] Enabling sessions with Cloudflare KV with the "SESSION" KV binding.
+20:56:33 [@astrojs/cloudflare] 
+ astro  v13.1.3 ready in 246 ms
+
+┃ Local    http://localhost:4321/
+
+GET / 200 OK (203ms)

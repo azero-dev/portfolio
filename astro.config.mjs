@@ -24,6 +24,7 @@ export default defineConfig({
     imageService: 'cloudflare-binding',
     imagesBindingName: 'IMAGES',
     sessionKVBindingName: 'SESSION',
+    prerenderEnvironment: 'node',
   }),
   output: 'server',
   site: 'https://inferente.com',

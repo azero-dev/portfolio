@@ -4,15 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 
-declare global {
-  interface Window {
-    pagefind?: any;
-  }
-}
-
-interface RawSearchResult {
+interface PagefindSearchResult {
   id: string;
   data: () => Promise<{
     url: string;
@@ -23,6 +16,21 @@ interface RawSearchResult {
       tags?: string[];
     };
   }>;
+}
+
+interface PagefindSearchResponse {
+  results: PagefindSearchResult[];
+}
+
+interface PagefindModule {
+  search: (query: string) => Promise<PagefindSearchResponse>;
+  preload?: (query: string) => Promise<void>;
+}
+
+declare global {
+  interface Window {
+    pagefind?: PagefindModule;
+  }
 }
 
 interface ProcessedSearchResult {
@@ -48,17 +56,43 @@ export function SearchBar() {
   // Initialize pagefind
   useEffect(() => {
     const initPagefind = async () => {
-      if (typeof window !== 'undefined' && !window.pagefind) {
-        try {
-          // @ts-ignore - pagefind will be available after load
-          window.pagefind = await import('/pagefind/pagefind.js');
-        } catch (error) {
-          console.error('Failed to load pagefind:', error);
-        }
+      if (typeof window === 'undefined' || window.pagefind) return;
+
+      // Check if script already loaded
+      if (document.querySelector('script[src="/pagefind/pagefind.js"]')) {
+        // Wait for pagefind to become available
+        const waitForPagefind = (attempts = 0) => {
+          if (window.pagefind) return;
+          if (attempts > 10) {
+            console.warn('Pagefind script loaded but window.pagefind not available');
+            return;
+          }
+          setTimeout(() => waitForPagefind(attempts + 1), 100);
+        };
+        waitForPagefind();
+        return;
       }
+
+      return new Promise<void>((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = '/pagefind/pagefind.js';
+        script.onload = () => {
+          if (!window.pagefind) {
+            console.warn('Pagefind script loaded but window.pagefind not defined');
+          }
+          resolve();
+        };
+        script.onerror = (error) => {
+          console.error('Failed to load pagefind script:', error);
+          reject(new Error('Failed to load pagefind'));
+        };
+        document.head.appendChild(script);
+      });
     };
 
-    initPagefind();
+    initPagefind().catch(() => {
+      // Silently fail - search will be disabled
+    });
   }, []);
 
   // Close search when clicking outside
@@ -83,7 +117,7 @@ export function SearchBar() {
     try {
       const search = await window.pagefind.search(searchQuery);
       const results = await Promise.all(
-        search.results.slice(0, 10).map(async (result: RawSearchResult) => ({
+        search.results.slice(0, 10).map(async (result: PagefindSearchResult) => ({
           id: result.id,
           data: await result.data(),
         }))
@@ -149,7 +183,7 @@ export function SearchBar() {
             <div className="p-4 text-center text-muted-foreground font-mono">Searching...</div>
           ) : results.length > 0 ? (
             <div className="divide-y divide-border">
-              {results.map((result, index) => (
+              {results.map((result) => (
                 <a
                   key={result.id}
                   href={result.data.url}
@@ -172,7 +206,7 @@ export function SearchBar() {
             </div>
           ) : query.trim() ? (
             <div className="p-4 text-center text-muted-foreground font-mono">
-              No results found for "{query}"
+              No results found for &quot;{query}&quot;
             </div>
           ) : null}
         </div>

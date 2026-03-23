@@ -20,6 +20,8 @@ export async function getStaticPaths() {
   return paths;
 }
 
+export const prerender = true;
+
 // Parse page parameter
 const { page } = Astro.params;
 const tag = Astro.url.searchParams.get('tag') || null;

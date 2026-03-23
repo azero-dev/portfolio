@@ -7,12 +7,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
+
 // Import data
 import projects from '../data/projects.json';
 import experience from '../data/experience.json';
 import education from '../data/education.json';
 import skills from '../data/skills.json';
 import { ProjectsTabs } from '@/components/about/ProjectsTabs';
+
+export const prerender = true;
 
 // Filter projects by status
 const activeProjects = projects.filter(p => p.status === 'active');
@@ -100,17 +103,14 @@ const canonicalUrl = Astro.url.href;
               <CardDescription>Technologies & tools</CardDescription>
             </CardHeader>
             <CardContent>
-              <div class="flex flex-wrap gap-2">
-                {skills.map((category) => (
-                  <>
-                    {category.items.map((skill) => (
-                      <Badge key={skill} variant="secondary" className="font-mono text-xs">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </>
-                ))}
-              </div>
+                <div class="flex flex-wrap gap-2">
+                  {skills.flatMap(category => category.items).map((skill) => (
+                    // @ts-ignore
+                    <Badge key={skill} variant="secondary" className="font-mono text-xs">
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
             </CardContent>
           </Card>
         </div>
@@ -188,9 +188,9 @@ const canonicalUrl = Astro.url.href;
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      const message = document.getElementById('message').value;
+      const name = (document.getElementById('name') as HTMLInputElement)!.value;
+      const email = (document.getElementById('email') as HTMLInputElement)!.value;
+      const message = (document.getElementById('message') as HTMLTextAreaElement)!.value;
       
       // Basic validation
       if (!name || !email || !message) {
