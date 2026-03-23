@@ -1,0 +1,164 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Container from '../components/layout/Container.astro';
+import Section from '../components/layout/Section.astro';
+import BlogList from '../components/blog/BlogList.astro';
+import BlogSidebar from '../components/blog/BlogSidebar.astro';
+import { getCollection } from 'astro:content';
+
+// Generate static paths for pagination (page 1 is handled by index.astro)
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const postsPerPage = 15;
+  const totalPages = Math.ceil(posts.length / postsPerPage);
+  
+  const paths = [];
+  for (let i = 2; i <= totalPages; i++) {
+    paths.push({ params: { page: i.toString() } });
+  }
+  
+  return paths;
+}
+
+// Parse page parameter
+const { page } = Astro.params;
+const tag = Astro.url.searchParams.get('tag') || null;
+
+// Handle root page redirect
+if (page === '1') {
+  return Astro.redirect('/', 301);
+}
+
+// Validate page number
+const pageNum = parseInt(page || '1');
+if (isNaN(pageNum) || pageNum < 1) {
+  return Astro.redirect('/', 301);
+}
+
+// Get all posts
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+
+// Filter by tag if specified
+const filteredPosts = tag 
+  ? allPosts.filter(post => post.data.tags.includes(tag))
+  : allPosts;
+
+filteredPosts.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+
+// Pagination settings
+const postsPerPage = 15;
+const totalPosts = filteredPosts.length;
+const totalPages = Math.ceil(totalPosts / postsPerPage);
+
+// Validate page range
+if (pageNum > totalPages && totalPages > 0) {
+  return Astro.redirect(`/page/${totalPages}`, 301);
+}
+
+// Get posts for current page
+const startIndex = (pageNum - 1) * postsPerPage;
+const endIndex = startIndex + postsPerPage;
+const pagePosts = filteredPosts.slice(startIndex, endIndex);
+
+// Helper to generate page URLs with tag
+const getPageUrl = (pageNum: number) => {
+  const base = pageNum === 1 ? '/' : `/page/${pageNum}`;
+  if (tag) {
+    return `${base}?tag=${encodeURIComponent(tag)}`;
+  }
+  return base;
+};
+
+// Create pagination URLs
+const prevPage = pageNum > 1 ? getPageUrl(pageNum - 1) : null;
+const nextPage = pageNum < totalPages ? getPageUrl(pageNum + 1) : null;
+---
+
+<Layout>
+  <Section padding="xl">
+    <Container>
+      <div class="text-center mb-12">
+        <h1 class="font-mono text-4xl md:text-5xl font-bold tracking-tighter mb-4">
+          &gt;blog_
+        </h1>
+        <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+          Page {pageNum} of {totalPages}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main content - Blog posts */}
+        <div class="lg:col-span-2">
+          {pagePosts.length > 0 ? (
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {pagePosts.map((post) => (
+                <div class="border border-border rounded-lg p-4 hover:border-primary transition-colors h-full flex flex-col">
+                  <h2 class="font-mono text-lg font-bold mb-2">{post.data.title}</h2>
+                  <p class="text-sm text-muted-foreground mb-3">
+                    {new Date(post.data.pubDate).toLocaleDateString('en-GB', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric'
+                    })}
+                  </p>
+                  <p class="text-sm text-foreground mb-4 flex-grow">{post.data.description}</p>
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    {post.data.tags.slice(0, 3).map((tag) => (
+                      <span class="text-xs font-mono px-2 py-1 border border-border rounded">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <a
+                    href={`/post/${post.id}`}
+                    class="font-mono text-sm text-primary hover:underline mt-auto"
+                  >
+                    Read Post →
+                  </a>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div class="text-center py-12">
+              <p class="text-muted-foreground font-mono">No posts found.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Sidebar */}
+        <div class="lg:col-span-1">
+          <div class="sticky top-24">
+             <BlogSidebar activeTag={tag} />
+          </div>
+        </div>
+      </div>
+
+      {/* Pagination */}
+      {(prevPage || nextPage) && (
+        <Section padding="md">
+          <div class="flex justify-center items-center gap-8">
+            {prevPage && (
+              <a
+                href={prevPage}
+                class="font-mono text-sm text-primary hover:underline flex items-center gap-2"
+              >
+                ← Previous Page
+              </a>
+            )}
+            <span class="font-mono text-sm text-muted-foreground">
+              Page {pageNum} of {totalPages}
+            </span>
+            {nextPage && (
+              <a
+                href={nextPage}
+                class="font-mono text-sm text-primary hover:underline flex items-center gap-2"
+              >
+                Next Page →
+              </a>
+            )}
+          </div>
+        </Section>
+      )}
+    </Container>
+  </Section>
+</Layout>

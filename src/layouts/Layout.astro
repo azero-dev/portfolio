@@ -21,11 +21,11 @@ import Container from '@/components/layout/Container.astro';
   <meta name="generator" content={Astro.generator} />
   <title>Portfolio - Minimal Cyberpunk</title>
 </head>
-<body class="min-h-screen font-sans antialiased">
+<body class="min-h-screen font-sans antialiased" data-pagefind-body>
   {/* Use React client component for theme provider */}
   <AppWrapper client:only="react">
     <Container as="div" className="min-h-screen">
-      <header class="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header class="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60" data-pagefind-ignore>
         <Container as="div" className="flex h-16 items-center justify-between">
           <div class="flex items-center gap-2">
             <a href="/" class="font-mono text-xl font-bold tracking-tighter text-primary hover:opacity-80 transition-opacity">
@@ -39,11 +39,11 @@ import Container from '@/components/layout/Container.astro';
         </Container>
       </header>
 
-      <main class="flex-1">
+      <main class="flex-1" data-pagefind-body>
         <slot />
       </main>
 
-      <footer class="mt-auto border-t border-border py-8">
+      <footer class="mt-auto border-t border-border py-8" data-pagefind-ignore>
         <Container>
           <div class="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div class="font-mono text-sm text-muted-foreground">

@@ -2,16 +2,23 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
-import cloudflare from '@astrojs/cloudflare';
+// import cloudflare from '@astrojs/cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [react(), tailwind()],
-  adapter: cloudflare({
-    imageService: 'cloudflare-binding',
-    imagesBindingName: 'IMAGES',
-    sessionKVBindingName: 'SESSION',
-  }),
-  output: 'server',
+  // adapter: cloudflare({
+  //   imageService: 'cloudflare-binding',
+  //   imagesBindingName: 'IMAGES',
+  //   sessionKVBindingName: 'SESSION',
+  // }),
+  output: 'static',
   site: 'https://inferente.com',
+  vite: {
+    build: {
+      rollupOptions: {
+        external: ['/pagefind/pagefind.js'],
+      },
+    },
+  },
 });

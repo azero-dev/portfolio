@@ -12,7 +12,7 @@ interface Project {
   tags: string[];
   link: string;
   image: string;
-  status: 'active' | 'archived';
+  status: string;
   date: string;
 }
 

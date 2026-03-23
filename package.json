@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "postbuild": "pagefind --site dist --verbose",
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",
@@ -29,6 +30,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.577.0",
     "next-themes": "^0.4.6",
+    "pagefind": "^1.4.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-icons": "^5.6.0",

@@ -1,0 +1,6 @@
+{
+  "site": "dist",
+  "rootSelector": "body",
+  "excludeSelectors": ["nav", "footer", "[data-pagefind-ignore]"],
+  "forceLanguage": "en"
+}

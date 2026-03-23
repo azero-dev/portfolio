@@ -1,0 +1,255 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Container from '../../components/layout/Container.astro';
+import Section from '../../components/layout/Section.astro';
+import { getEntry, getCollection } from 'astro:content';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+
+// Generate static paths for all blog posts
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+// Get the post
+const { slug } = Astro.params;
+const post = await getEntry('blog', slug);
+
+// If post doesn't exist, redirect to 404
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+// Get related posts (same tags)
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const relatedPosts = allPosts
+  .filter(p => p.id !== slug && p.data.tags.some(tag => post.data.tags.includes(tag)))
+  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+  .slice(0, 3);
+
+// Get next/previous posts
+const sortedPosts = allPosts.sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+const currentIndex = sortedPosts.findIndex(p => p.id === slug);
+const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+const nextPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+---
+
+<Layout>
+  <Section padding="xl">
+    <Container>
+      {/* Back to blog link */}
+      <div class="mb-8">
+        <a href="/" class="font-mono text-sm text-primary hover:underline inline-flex items-center gap-2">
+          ← Back to Blog
+        </a>
+      </div>
+
+      {/* Post header */}
+      <article class="max-w-3xl mx-auto">
+        <header class="mb-12">
+          <h1 class="font-mono text-3xl md:text-4xl font-bold tracking-tighter mb-4">
+            {post.data.title}
+          </h1>
+          
+          <div class="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-6">
+            <time>
+              {new Date(post.data.pubDate).toLocaleDateString('en-GB', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+            {post.data.updatedDate && (
+              <span class="italic">
+                (Updated: {new Date(post.data.updatedDate).toLocaleDateString('en-GB', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric'
+                })})
+              </span>
+            )}
+          </div>
+
+          {post.data.description && (
+            <p class="text-xl text-muted-foreground mb-8">
+              {post.data.description}
+            </p>
+          )}
+
+          {post.data.tags.length > 0 && (
+            <div class="flex flex-wrap gap-2 mb-8">
+              {post.data.tags.map((tag) => (
+                 <a
+                   href={`/page/1?tag=${encodeURIComponent(tag)}`}
+                   class="inline-block"
+                 >
+                  <Badge variant="outline" className="font-mono text-xs hover:bg-accent hover:text-accent-foreground transition-colors">
+                    {tag}
+                  </Badge>
+                </a>
+              ))}
+            </div>
+          )}
+        </header>
+
+        {/* Post content */}
+        <div class="prose prose-invert prose-lg max-w-none mb-16">
+          {post.rendered && (
+            <Fragment set:html={post.rendered} />
+          )}
+        </div>
+
+        {/* Post footer */}
+        <footer class="border-t border-border pt-8">
+          {/* Share links */}
+          <div class="flex items-center justify-between mb-8">
+            <div>
+              <h3 class="font-mono text-lg font-bold mb-4">Share this post</h3>
+              <div class="flex gap-4">
+                <Button variant="outline" size="sm" asChild>
+                  <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(Astro.url.href)}`} target="_blank">
+                    Twitter
+                  </a>
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`} target="_blank">
+                    LinkedIn
+                  </a>
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Navigation between posts */}
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            {prevPost && (
+              <div class="border border-border rounded-lg p-6 hover:border-primary transition-colors">
+                <p class="font-mono text-sm text-muted-foreground mb-2">Previous Post</p>
+                <h3 class="font-semibold text-lg mb-2">
+                  <a href={`/post/${prevPost.id}`} class="hover:text-primary transition-colors">
+                    {prevPost.data.title}
+                  </a>
+                </h3>
+                <p class="text-sm text-muted-foreground">
+                  {new Date(prevPost.data.pubDate).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                  })}
+                </p>
+              </div>
+            )}
+            {nextPost && (
+              <div class="border border-border rounded-lg p-6 hover:border-primary transition-colors md:text-right">
+                <p class="font-mono text-sm text-muted-foreground mb-2">Next Post</p>
+                <h3 class="font-semibold text-lg mb-2">
+                  <a href={`/post/${nextPost.id}`} class="hover:text-primary transition-colors">
+                    {nextPost.data.title}
+                  </a>
+                </h3>
+                <p class="text-sm text-muted-foreground">
+                  {new Date(nextPost.data.pubDate).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                  })}
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Related posts */}
+          {relatedPosts.length > 0 && (
+            <div class="mb-16">
+              <h3 class="font-mono text-2xl font-bold mb-8">Related Posts</h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {relatedPosts.map((related) => (
+                   <div class="border border-border rounded-lg p-4 hover:border-primary transition-colors">
+                    <h4 class="font-semibold mb-2">
+                      <a href={`/post/${related.id}`} class="hover:text-primary transition-colors">
+                        {related.data.title}
+                      </a>
+                    </h4>
+                    <p class="text-sm text-muted-foreground mb-3">
+                      {new Date(related.data.pubDate).toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                      })}
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                      {related.data.tags.slice(0, 2).map((tag) => (
+                         <span class="text-xs font-mono px-2 py-1 border border-border rounded">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </footer>
+      </article>
+    </Container>
+  </Section>
+</Layout>
+
+<style>
+  /* Custom styles for blog post content */
+  .prose {
+    color: hsl(var(--foreground));
+  }
+  
+  .prose a {
+    color: hsl(var(--primary));
+    text-decoration: none;
+  }
+  
+  .prose a:hover {
+    text-decoration: underline;
+  }
+  
+  .prose h1, .prose h2, .prose h3, .prose h4 {
+    color: hsl(var(--foreground));
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: bold;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+  }
+  
+  .prose code {
+    background-color: hsl(var(--muted));
+    padding: 0.2em 0.4em;
+    border-radius: 0.25rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9em;
+  }
+  
+  .prose pre {
+    background-color: hsl(var(--muted));
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    border: 1px solid hsl(var(--border));
+  }
+  
+  .prose blockquote {
+    border-left: 4px solid hsl(var(--primary));
+    padding-left: 1rem;
+    font-style: italic;
+    color: hsl(var(--muted-foreground));
+  }
+  
+  .prose img {
+    border-radius: 0.5rem;
+    border: 1px solid hsl(var(--border));
+  }
+</style>

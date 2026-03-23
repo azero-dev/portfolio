@@ -1,13 +1,13 @@
-/* Import Tailwind v3 */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* Import custom fonts */
 @import './fonts.css';
 
 /* Import theme variables */
 @import './theme.css';
+
+/* Import Tailwind v3 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Custom styles */
 @layer base {

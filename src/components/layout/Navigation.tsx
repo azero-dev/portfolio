@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 const NAV_ITEMS = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
-  { label: 'Blog', href: '/blog' },
 ];
 
 const SOCIAL_LINKS = [

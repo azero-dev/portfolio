@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import Container from '../layout/Container.astro';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+
+interface Props {
+  limit?: number;
+  showFeatured?: boolean;
+  tag?: string;
+  posts?: any[];
+}
+
+const { limit, showFeatured = false, tag, posts: providedPosts } = Astro.props;
+
+// Get blog posts
+let posts = providedPosts;
+if (!posts) {
+  posts = await getCollection('blog', ({ data }) => {
+    return !data.draft;
+  });
+
+  // Sort by date (newest first)
+  posts.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+
+  // Apply tag filter if specified
+  if (tag) {
+    posts = posts.filter(post => post.data.tags.includes(tag));
+  }
+}
+
+// Apply featured filter if requested
+if (showFeatured) {
+  posts = posts.filter(post => post.data.featured);
+}
+
+// Apply limit if specified
+if (limit && limit > 0) {
+  posts = posts.slice(0, limit);
+}
+---
+
+{posts.length > 0 ? (
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {posts.map((post) => (
+      <Card key={post.id} className="border-border hover:border-primary transition-colors h-full flex flex-col">
+        <CardHeader>
+          <CardTitle className="font-mono text-lg">{post.data.title}</CardTitle>
+          <CardDescription>
+            {new Date(post.data.pubDate).toLocaleDateString('en-GB', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric'
+            })}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex-grow">
+          <p class="text-sm text-muted-foreground mb-4">{post.data.description}</p>
+          <div class="flex flex-wrap gap-2 mb-4">
+            {post.data.tags.slice(0, 3).map((tag) => (
+              <Badge variant="outline" className="text-xs font-mono">
+                {tag}
+              </Badge>
+            ))}
+            {post.data.tags.length > 3 && (
+              <Badge variant="secondary" className="text-xs">
+                +{post.data.tags.length - 3}
+              </Badge>
+            )}
+          </div>
+          <div class="mt-auto">
+            <Button variant="outline" size="sm" asChild>
+              <a href={`/post/${post.id}`}>Read Post</a>
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    ))}
+  </div>
+) : (
+  <div class="text-center py-12">
+    <p class="text-muted-foreground font-mono">No blog posts found.</p>
+  </div>
+)}

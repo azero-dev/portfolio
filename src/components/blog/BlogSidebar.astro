@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import { SearchBar } from './SearchBar';
+import { Badge } from '@/components/ui/badge';
+
+interface Props {
+  activeTag?: string;
+}
+
+const { activeTag } = Astro.props;
+
+// Get all posts to extract tags
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+// Count tag frequency
+const tagCounts: Record<string, number> = {};
+posts.forEach((post) => {
+  post.data.tags.forEach((tag) => {
+    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+  });
+});
+
+// Convert to array and sort by frequency
+const tags = Object.entries(tagCounts)
+  .map(([tag, count]) => ({ tag, count }))
+  .sort((a, b) => b.count - a.count)
+  .slice(0, 15); // Top 15 tags
+
+// Calculate tag size classes based on frequency
+const getTagSize = (count: number, maxCount: number) => {
+  if (count > maxCount * 0.7) return 'text-base';
+  if (count > maxCount * 0.4) return 'text-sm';
+  return 'text-xs';
+};
+
+const maxCount = tags.length > 0 ? Math.max(...tags.map(t => t.count)) : 1;
+---
+
+<div class="space-y-8">
+  {/* Search */}
+  <div>
+    <h3 class="font-mono text-lg font-bold mb-4">&gt;search</h3>
+    <SearchBar client:load />
+  </div>
+
+  {/* Tags cloud */}
+  {tags.length > 0 && (
+    <div>
+      <h3 class="font-mono text-lg font-bold mb-4">&gt;tags</h3>
+      <div class="flex flex-wrap gap-2">
+        {tags.map(({ tag, count }) => (
+           <a
+            href={`/page/1?tag=${encodeURIComponent(tag)}`}
+            class="inline-block"
+          >
+            <Badge
+              variant={activeTag === tag ? 'default' : 'outline'}
+              className={`font-mono ${getTagSize(count, maxCount)} hover:bg-accent hover:text-accent-foreground transition-colors ${activeTag === tag ? 'bg-primary text-primary-foreground' : ''}`}
+            >
+              {tag} ({count})
+            </Badge>
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+
+  {/* Recent posts */}
+  {posts.length > 0 && (
+    <div>
+      <h3 class="font-mono text-lg font-bold mb-4">&gt;recent</h3>
+      <ul class="space-y-3">
+        {posts
+          .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+          .slice(0, 5)
+          .map((post) => (
+             <li>
+              <a
+                href={`/post/${post.id}`}
+                class="group block p-3 rounded-md border border-border hover:border-primary transition-colors"
+              >
+                <h4 class="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                  {post.data.title}
+                </h4>
+                <p class="text-xs text-muted-foreground mt-1">
+                  {new Date(post.data.pubDate).toLocaleDateString('en-GB', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                  })}
+                </p>
+              </a>
+            </li>
+          ))}
+      </ul>
+    </div>
+  )}
+</div>

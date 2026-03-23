@@ -1,11 +1,94 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import Container from '../components/layout/Container.astro';
+import Section from '../components/layout/Section.astro';
+import BlogList from '../components/blog/BlogList.astro';
+import BlogSidebar from '../components/blog/BlogSidebar.astro';
+import { getCollection } from 'astro:content';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Get all posts
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+allPosts.sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
+
+// Filter by tag if specified
+const tag = Astro.url.searchParams.get('tag') || null;
+const filteredPosts = tag 
+  ? allPosts.filter(post => post.data.tags.includes(tag))
+  : allPosts;
+
+// Pagination settings
+const postsPerPage = 15;
+const totalPosts = filteredPosts.length;
+const totalPages = Math.ceil(totalPosts / postsPerPage);
+const currentPage = 1;
+
+// Get posts for current page
+const startIndex = (currentPage - 1) * postsPerPage;
+const endIndex = startIndex + postsPerPage;
+const pagePosts = filteredPosts.slice(startIndex, endIndex);
+
+// Helper to generate page URLs with tag
+const getPageUrl = (pageNum: number) => {
+  const base = pageNum === 1 ? '/' : `/page/${pageNum}`;
+  if (tag) {
+    return `${base}?tag=${encodeURIComponent(tag)}`;
+  }
+  return base;
+};
 ---
 
 <Layout>
-	<Welcome />
+  <Section padding="xl">
+    <Container>
+      <div class="text-center mb-12">
+        <h1 class="font-mono text-4xl md:text-5xl font-bold tracking-tighter mb-4">
+          &gt;blog_
+        </h1>
+        <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+          Thoughts on technology, design, and the cyberpunk future.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Main content - Blog posts */}
+        <div class="lg:col-span-2">
+           <BlogList posts={pagePosts} />
+        </div>
+
+        {/* Sidebar */}
+        <div class="lg:col-span-1">
+          <div class="sticky top-24">
+             <BlogSidebar activeTag={tag} />
+          </div>
+        </div>
+      </div>
+
+      {/* Pagination (simplified for now) */}
+      {totalPages > 1 && (
+        <Section padding="md">
+          <div class="flex justify-center items-center gap-4">
+              {currentPage > 1 && (
+                <a
+                  href={getPageUrl(currentPage - 1)}
+                  class="font-mono text-sm text-primary hover:underline"
+                >
+                  ← Previous
+                </a>
+              )}
+            <span class="font-mono text-sm text-muted-foreground">
+              Page {currentPage} of {totalPages}
+            </span>
+            {currentPage < totalPages && (
+              <a
+                  href={getPageUrl(currentPage + 1)}
+                class="font-mono text-sm text-primary hover:underline"
+              >
+                Next →
+              </a>
+            )}
+          </div>
+        </Section>
+      )}
+    </Container>
+  </Section>
 </Layout>
