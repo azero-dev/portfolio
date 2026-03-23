@@ -72,9 +72,15 @@ const getPageUrl = (pageNum: number) => {
 // Create pagination URLs
 const prevPage = pageNum > 1 ? getPageUrl(pageNum - 1) : null;
 const nextPage = pageNum < totalPages ? getPageUrl(pageNum + 1) : null;
+
+// SEO metadata
+const title = tag ? `Blog - ${tag} - Page ${pageNum}` : `Blog - Page ${pageNum}`;
+const description = tag ? `Page ${pageNum} of blog posts tagged "${tag}"` : `Page ${pageNum} of blog posts about software engineering, cyberpunk, and technology.`;
+const canonicalUrl = Astro.url.href;
 ---
 
-<Layout>
+
+<Layout title={title} description={description} canonicalUrl={canonicalUrl}>
   <Section padding="xl">
     <Container>
       <div class="text-center mb-12">
@@ -128,7 +134,7 @@ const nextPage = pageNum < totalPages ? getPageUrl(pageNum + 1) : null;
         {/* Sidebar */}
         <div class="lg:col-span-1">
           <div class="sticky top-24">
-             <BlogSidebar activeTag={tag} />
+              <BlogSidebar activeTag={tag || undefined} />
           </div>
         </div>
       </div>

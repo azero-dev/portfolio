@@ -17,26 +17,36 @@ import { ProjectsTabs } from '@/components/about/ProjectsTabs';
 // Filter projects by status
 const activeProjects = projects.filter(p => p.status === 'active');
 const archivedProjects = projects.filter(p => p.status === 'archived');
+
+// SEO metadata
+const title = 'About';
+const description = 'Software Engineer & Cyberpunk enthusiast building the future with code. Portfolio with experience, projects, and contact.';
+const canonicalUrl = Astro.url.href;
 ---
 
-<Layout>
+<Layout
+  title={title}
+  description={description}
+  canonicalUrl={canonicalUrl}
+  type="profile"
+>
   <Section padding="xl">
     <Container>
       {/* Hero section */}
-      <div className="text-center mb-16">
-        <h1 className="font-mono text-4xl md:text-5xl font-bold tracking-tighter mb-4">
+      <div class="text-center mb-16">
+        <h1 class="font-mono text-4xl md:text-5xl font-bold tracking-tighter mb-4">
           &gt;about_
         </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
           Software Engineer & Cyberpunk enthusiast building the future with code.
         </p>
       </div>
 
       {/* Intro section */}
       <Section padding="lg">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="font-mono text-2xl font-bold mb-6">&gt;who_am_i</h2>
-          <p className="text-lg text-muted-foreground">
+        <div class="max-w-3xl mx-auto text-center">
+          <h2 class="font-mono text-2xl font-bold mb-6">&gt;who_am_i</h2>
+          <p class="text-lg text-muted-foreground">
             Welcome to my digital corner. I'm a passionate developer with a love for minimalist design, cutting-edge technology, and the cyberpunk aesthetic. This portfolio is a reflection of my journey—where code meets creativity.
           </p>
         </div>
@@ -44,7 +54,7 @@ const archivedProjects = projects.filter(p => p.status === 'archived');
 
       {/* Three horizontal blocks */}
       <Section padding="lg">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <!-- Experience -->
           <Card className="border-border">
             <CardHeader>
@@ -52,12 +62,12 @@ const archivedProjects = projects.filter(p => p.status === 'archived');
               <CardDescription>Professional journey</CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-4">
+              <ul class="space-y-4">
                 {experience.slice(0, 3).map((item) => (
-                  <li key={item.company}>
-                    <h3 className="font-semibold">{item.role}</h3>
-                    <p className="text-sm text-muted-foreground">{item.company} • {item.period}</p>
-                    <p className="text-sm mt-1">{item.description}</p>
+                  <li>
+                    <h3 class="font-semibold">{item.role}</h3>
+                    <p class="text-sm text-muted-foreground">{item.company} • {item.period}</p>
+                    <p class="text-sm mt-1">{item.description}</p>
                   </li>
                 ))}
               </ul>
@@ -71,12 +81,12 @@ const archivedProjects = projects.filter(p => p.status === 'archived');
               <CardDescription>Academic background</CardDescription>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-4">
+              <ul class="space-y-4">
                 {education.map((item) => (
-                  <li key={item.institution}>
-                    <h3 className="font-semibold">{item.degree}</h3>
-                    <p className="text-sm text-muted-foreground">{item.institution} • {item.period}</p>
-                    <p className="text-sm mt-1">{item.description}</p>
+                  <li>
+                    <h3 class="font-semibold">{item.degree}</h3>
+                    <p class="text-sm text-muted-foreground">{item.institution} • {item.period}</p>
+                    <p class="text-sm mt-1">{item.description}</p>
                   </li>
                 ))}
               </ul>
@@ -90,7 +100,7 @@ const archivedProjects = projects.filter(p => p.status === 'archived');
               <CardDescription>Technologies & tools</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-wrap gap-2">
+              <div class="flex flex-wrap gap-2">
                 {skills.map((category) => (
                   <>
                     {category.items.map((skill) => (
@@ -108,57 +118,57 @@ const archivedProjects = projects.filter(p => p.status === 'archived');
 
       {/* Projects: Active */}
       <Section padding="lg">
-        <h2 className="font-mono text-2xl font-bold mb-8 text-center">&gt;active_projects</h2>
+        <h2 class="font-mono text-2xl font-bold mb-8 text-center">&gt;active_projects</h2>
          <ProjectsTabs activeProjects={activeProjects} archivedProjects={archivedProjects} client:load />
       </Section>
 
       {/* Contact form */}
       <Section padding="lg">
-        <div className="max-w-2xl mx-auto">
-          <h2 className="font-mono text-2xl font-bold mb-8 text-center">&gt;get_in_touch</h2>
+        <div class="max-w-2xl mx-auto">
+          <h2 class="font-mono text-2xl font-bold mb-8 text-center">&gt;get_in_touch</h2>
           <Card className="border-border">
             <CardHeader>
               <CardTitle className="font-mono">Contact Form</CardTitle>
               <CardDescription>Send me a message directly via email</CardDescription>
             </CardHeader>
             <CardContent>
-              <form id="contact-form" action="#" method="post" className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form id="contact-form" action="#" method="post" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label for="name" className="block text-sm font-medium mb-1">Name</label>
+                    <label for="name" class="block text-sm font-medium mb-1">Name</label>
                     <input
                       type="text"
                       id="name"
                       name="name"
                       required
-                      className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
+                      class="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
                       placeholder="Your name"
                     />
                   </div>
                   <div>
-                    <label for="email" className="block text-sm font-medium mb-1">Email</label>
+                    <label for="email" class="block text-sm font-medium mb-1">Email</label>
                     <input
                       type="email"
                       id="email"
                       name="email"
                       required
-                      className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
+                      class="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
                       placeholder="your.email@example.com"
                     />
                   </div>
                 </div>
                 <div>
-                  <label for="message" className="block text-sm font-medium mb-1">Message</label>
+                  <label for="message" class="block text-sm font-medium mb-1">Message</label>
                   <textarea
                     id="message"
                     name="message"
                     rows="4"
                     required
-                    className="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
+                    class="w-full px-3 py-2 border border-input rounded-md bg-background text-foreground"
                     placeholder="Your message here..."
                   ></textarea>
                 </div>
-                <div className="flex justify-end">
+                <div class="flex justify-end">
                   <Button type="submit" className="font-mono">
                     Send Message
                   </Button>

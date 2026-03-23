@@ -35,9 +35,23 @@ const getPageUrl = (pageNum: number) => {
   }
   return base;
 };
+
+// SEO metadata
+const title = tag ? `Posts tagged "${tag}"` : 'Blog';
+const description = tag 
+  ? `Blog posts about ${tag} - Cyberpunk portfolio and tech blog.`
+  : 'Thoughts on technology, design, and the cyberpunk future.';
+const canonicalUrl = Astro.url.href;
+const seoTags = tag ? [tag] : [];
 ---
 
-<Layout>
+<Layout
+  title={title}
+  description={description}
+  canonicalUrl={canonicalUrl}
+  type="website"
+  tags={seoTags}
+>
   <Section padding="xl">
     <Container>
       <div class="text-center mb-12">
@@ -58,7 +72,7 @@ const getPageUrl = (pageNum: number) => {
         {/* Sidebar */}
         <div class="lg:col-span-1">
           <div class="sticky top-24">
-             <BlogSidebar activeTag={tag} />
+              <BlogSidebar activeTag={tag || undefined} />
           </div>
         </div>
       </div>

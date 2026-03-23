@@ -38,9 +38,30 @@ const sortedPosts = allPosts.sort(
 const currentIndex = sortedPosts.findIndex(p => p.id === slug);
 const prevPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
 const nextPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+
+// SEO metadata
+const title = post.data.title;
+const description = post.data.description || `Blog post about ${post.data.tags.join(', ')}`;
+const canonicalUrl = Astro.url.href;
+const type = 'article';
+const publishedTime = post.data.pubDate.toISOString();
+const modifiedTime = post.data.updatedDate ? post.data.updatedDate.toISOString() : publishedTime;
+const tags = post.data.tags;
+const author = 'azer0';
+const image = '/og-image.png';
 ---
 
-<Layout>
+<Layout
+  title={title}
+  description={description}
+  canonicalUrl={canonicalUrl}
+  type={type}
+  publishedTime={publishedTime}
+  modifiedTime={modifiedTime}
+  tags={tags}
+  author={author}
+  image={image}
+>
   <Section padding="xl">
     <Container>
       {/* Back to blog link */}
