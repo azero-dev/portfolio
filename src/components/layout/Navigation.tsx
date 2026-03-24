@@ -72,6 +72,7 @@ export function Navigation() {
 
       {/* Mobile overlay menu */}
       <div
+        data-testid="mobile-menu"
         className={cn(
           'fixed inset-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60',
           'transition-all duration-300 ease-out',
