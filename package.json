@@ -17,7 +17,8 @@
     "format": "prettier --write .",
     "lint:fix": "eslint --fix .",
     "lighthouse": "npx lighthouse https://inferente.com --output html --output-path ./lighthouse-report.html",
-    "prepare": "husky"
+    "prepare": "husky",
+    "deploy": "astro build"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.1.3",
