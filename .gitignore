@@ -28,3 +28,8 @@ pnpm-debug.log*
 info.md
 plan.md
 metadata/
+
+# Not ready yet
+CHANGELOG.md
+CONTRIBUTING.md
+ACTIVITYPUB_SETUP.md

@@ -2,6 +2,8 @@
 
 This document outlines the steps to complete the ActivityPub integration (Phase 7) for your portfolio.
 
+Remember: This is a project still under development!
+
 ## What's Been Implemented
 
 1. **Dependencies**: `@fedify/fedify` installed.
